@@ -1,12 +1,12 @@
 <script lang="ts" module>
 	import Card from '../card/card.svelte';
 
-	let src = '/favicon.png';
-	let alt = 'Badge';
+	let src = '/logo.png';
+	let alt = 'AdsLatte Login';
 </script>
 
 <Card
-	class="z-10 mx-20 -mt-16 flex max-w-64 items-center justify-center bg-gradient-to-b from-black to-gray-700 p-5"
+	class="z-10 mx-24 -mt-8 flex max-w-64 items-center justify-center bg-white border-slate-700 rounded-2xl p-5"
 >
-	<img {src} {alt} class="size-32 text-center" />
+	<img {src} {alt} class="size-24 text-center" />
 </Card>

@@ -1,47 +1,12 @@
 {
   "version": "7",
-  "dialect": "postgresql",
+  "dialect": "mysql",
   "entries": [
     {
       "idx": 0,
-      "version": "7",
-      "when": 1733907958572,
-      "tag": "0000_demonic_thanos",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1733908732325,
-      "tag": "0001_handy_azazel",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1733977246737,
-      "tag": "0002_fast_eternals",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1734606973141,
-      "tag": "0003_quiet_steel_serpent",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1734607411152,
-      "tag": "0004_mature_spot",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1734610050838,
-      "tag": "0005_flat_yellowjacket",
+      "version": "5",
+      "when": 1734668042219,
+      "tag": "0000_overconfident_donald_blake",
       "breakpoints": true
     }
   ]

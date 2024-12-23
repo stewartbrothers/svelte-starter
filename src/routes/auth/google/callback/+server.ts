@@ -14,7 +14,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const code = event.url.searchParams.get('code');
 	const state = event.url.searchParams.get('state');
 
-	const confirmCode = await db.select().from(oauthTable).where(eq(oauthTable.State, state));
+	const confirmCode = await db.select().from(oauthTable).where(eq(oauthTable.state, state));
 
 	if (code === null || state === null || confirmCode === null || confirmCode.length != 1) {
 		return new Response(null, { status: 400 });
@@ -22,7 +22,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 
 	const store = confirmCode.pop();
 
-	if (state !== store.State) {
+	if (state !== store.state) {
 		return new Response(null, { status: 400 });
 	}
 
@@ -43,7 +43,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const existingUser = await db
 		.select()
 		.from(usersTable)
-		.where(eq(usersTable.GoogleId, googleUserId));
+		.where(eq(usersTable.googleId, googleUserId));
 
 	// const existingUser = await db.query.usersTagb.findFirst({
 	// 	with: {
@@ -84,11 +84,11 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	// // TODO: Replace this with your own DB query.
 	// const user = await createUser(googleUserId, username);
 	await db.insert(usersTable).values({
-		GoogleId: googleUserId,
-		Name: username,
-		Email: email,
-		Firstname: claims.given_name,
-		Lastname: claims.family_name
+		googleId: googleUserId,
+		name: username,
+		email: email,
+		firstname: claims.given_name,
+		lastname: claims.family_name
 	});
 
 	return new Response('You are created ' + claims.family_name, { status: 200 });

@@ -4,43 +4,38 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { GoogleAuth } from '$lib/components/ui/google-auth/index';
-	import { AsLogo } from '$lib/components/ui/asLogo/index';
+	import { Badge } from '$lib/components/ui/badge/index';
 </script>
 
-;
-
-<Card.Root class="mx-auto max-w-sm">
-	<AsLogo />
+<Card.Root class="mx-auto max-w-sm mt-8">
+	<Badge />
 	<Card.Header>
-		<Card.Title class="text-2xl">Login</Card.Title>
-		<Card.Description>Enter your email below to login to your account</Card.Description>
+		<Card.Title class="text-2xl">Signup</Card.Title>
+		<Card.Description>Enter your email to create to your account</Card.Description>
 	</Card.Header>
 	<Card.Content>
-		<div class="grid gap-4">
-			<div class="grid gap-2">
-				<Label for="email">Email</Label>
-				<Input id="email" type="email" placeholder="m@example.com" required />
-			</div>
-			<div class="grid gap-2">
-				<div class="flex items-center">
-					<Label for="password">Password</Label>
-					<a href="##" class="ml-auto inline-block text-sm underline"> Forgot your password? </a>
+		<form method="POST">
+			<div class="grid gap-4">
+				<div class="grid gap-2">
+					<Label for="email">Email</Label>
+					<Input id="email" type="email" placeholder="m@example.com" required />
 				</div>
-				<Input id="password" type="password" required />
-			</div>
-			<div class="grid gap-2">
-				<div class="flex items-center">
-					<Label for="password">Confirm Password</Label>
+				<div class="grid gap-2">
+					<div class="flex items-center">
+						<Label for="password">Password</Label>
+					</div>
+					<Input id="password" type="password" required />
 				</div>
-				<Input id="confirm_password" type="password" required />
+				<div class="grid gap-2">
+					<div class="flex items-center">
+						<Label for="password">Confirm Password</Label>
+					</div>
+					<Input id="confirm_password" type="password" required />
+				</div>
+				<Button type="submit" class="w-full">Create Account</Button>
+				<hr />
+				<GoogleAuth />
 			</div>
-			<Button type="submit" class="w-full">Login</Button>
-			<hr />
-			<GoogleAuth />
-		</div>
-		<div class="mt-4 text-center text-sm">
-			Don't have an account?
-			<a href="/auth" class="underline"> Login </a>
-		</div>
+		</form>
 	</Card.Content>
 </Card.Root>

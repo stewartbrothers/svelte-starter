@@ -1,29 +1,52 @@
-import { sql } from 'drizzle-orm';
-import { text, uuid, pgTable, timestamp } from 'drizzle-orm/pg-core';
+// import { sql } from 'drizzle-orm';
+import { json, int, text, time, boolean, timestamp, mysqlEnum, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
 
-const table = pgTable;
+
+const table = mysqlTable;
+const enm = mysqlEnum;
 
 export const usersTable = table('users', {
-	Id: uuid('id')
-		.primaryKey()
-		.default(sql`gen_random_uuid()`),
-	Firstname: text('first_name'),
-	Lastname: text('last_name'),
-	Email: text('email'),
-	Password: text('password'),
-	GoogleId: text('googleId'),
-	Name: text('name')
+	id: int().primaryKey().autoincrement(),
+	firstname: text(),
+	lastname: text(),
+	email: text(),
+	password: text(),
+	googleId: text(),
+	name: text()
 });
 
 export const oauthTable = table('oauth', {
-	CreatedAt: timestamp('created_at', { withTimezone: true, precision: 4 }).defaultNow(),
-	State: text('state'),
-	Code: text('code')
+	createdAt: timestamp().defaultNow(),
+	state: text(),
+	code: text()
 });
 
 export const sessionTable = table('session', {
-	User: uuid('user_id').primaryKey(),
-	CreatedAt: timestamp('created_at', { withTimezone: true, precision: 4 }).defaultNow(),
-	ExpiresAt: timestamp('expires_at', { withTimezone: true, precision: 4 }).defaultNow(),
-	SessionId: text('session_key')
+	user: int().primaryKey().autoincrement(),
+	createdAt: timestamp().defaultNow(),
+	expiresAt: timestamp().defaultNow(),
+	sessionId: varchar({length: 200})
+});
+
+export const contentTable = table('content', {
+	id: int().primaryKey().autoincrement(),
+	title: text('title'),
+	status: enm(["Usable","Retired"]),
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp(),
+	tags: json(),
+	thumbnail: varchar({length: 400}),
+	description: varchar({length: 500}),
+	code: varchar({length:100}),
+	url: varchar({length: 300}),
+	time: time(),
+	hasOverlays: boolean(),
+	version: int(),
+	category: varchar({length: 100}),
+	ratio: json(),
+	fileFormat: varchar({length: 5}),
+	type: varchar({length: 30}),
+	hash: varchar({length: 256}),
+	inUse: boolean(),
+	contentType: varchar({length: 100})
 });
