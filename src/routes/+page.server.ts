@@ -1,26 +1,26 @@
-import { createUser } from '$lib/user/helpers'
+import { createUser } from '$lib/user/helpers';
 
 export function load() {
 	return {
-        data: "No Longer Do I Need You!"
-    };
-};
+		data: 'No Longer Do I Need You!'
+	};
+}
 
 export const actions = {
-    default: async ({cookies, request}) => {
-        const data = await request.formData();
-        const email = data.get('email')?.toString;
-        const password = data.get('password')?.toString;
-        const cPassword = data.get('cPassword')?.toString;
+	default: async ({ cookies, request }) => {
+		const data = await request.formData();
+		const email = data.get('email')?.toString();
+		const password = data.get('password')?.toString();
+		const cPassword = data.get('cPassword')?.toString();
 
-        if(email === null || password === null || password !== cPassword) {
-            //Badness... Throw an error.
+		if (email === null || password === null || password !== cPassword) {
+			throw new Error('Things are not defined.');
+		}
 
-        }
+		const created = await createUser(email, password, cPassword);
 
-        const created = await createUser(email.toString(), password, cPassword);
-
-        // if(created) {
-        // }
-    }
-}
+		if (created) {
+			return true;
+		}
+	}
+};

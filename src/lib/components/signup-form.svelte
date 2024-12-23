@@ -7,7 +7,7 @@
 	import { Badge } from '$lib/components/ui/badge/index';
 </script>
 
-<Card.Root class="mx-auto max-w-sm mt-8">
+<Card.Root class="mx-auto mt-8 max-w-sm">
 	<Badge />
 	<Card.Header>
 		<Card.Title class="text-2xl">Signup</Card.Title>
@@ -28,9 +28,9 @@
 				</div>
 				<div class="grid gap-2">
 					<div class="flex items-center">
-						<Label for="password">Confirm Password</Label>
+						<Label for="cPassword">Confirm Password</Label>
 					</div>
-					<Input id="confirm_password" type="password" required />
+					<Input id="cPassword" type="password" required />
 				</div>
 				<Button type="submit" class="w-full">Create Account</Button>
 				<hr />
