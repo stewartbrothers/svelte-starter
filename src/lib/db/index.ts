@@ -5,4 +5,10 @@ if (!DB_URL) {
 	throw new Error('DB_URL is not defined');
 }
 
+// export function initDb() {
+// 	if (!db) {
+// 		db = drizzle(DB_URL);
+// 	}
+// }
+
 export const db = drizzle(DB_URL);

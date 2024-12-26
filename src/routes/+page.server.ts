@@ -1,9 +1,11 @@
-import { createUser } from '$lib/user/helpers';
+import { validateUser, createUser } from '$lib/user';
 
-export function load() {
-	return {
+export async function load() {
+	const x = {
 		data: 'No Longer Do I Need You!'
 	};
+
+	return x;
 }
 
 export const actions = {
@@ -15,15 +17,13 @@ export const actions = {
 		const cPassword = data.get('cPassword')?.toString();
 
 		if (email === null || password === null || password !== cPassword) {
-			console.error('I am not impress');
 			throw new Error('Things are not defined.');
 		}
-
-		console.info('Made it through');
 
 		const created = await createUser(email, password, cPassword);
 
 		if (created) {
+			await validateUser(email, password);
 			return true;
 		}
 	}

@@ -5,10 +5,12 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { GoogleAuth } from '$lib/components/ui/google-auth/index';
 	import { Badge } from '$lib/components/ui/badge/index';
+
+	let { data } = $props();
 </script>
 
 <div
-	class="lg:max-w-4/5 container relative m-10 mx-auto hidden h-[800px] flex-col items-center justify-center rounded-2xl bg-stone-100 dark:bg-zinc-950 md:grid lg:grid-cols-2 lg:px-0"
+	class="lg:max-w-4/5 container relative m-10 mx-auto h-[900px] flex-col items-center justify-center rounded-2xl bg-stone-100 dark:bg-zinc-950 sm:grid md:grid lg:grid-cols-2 lg:px-0"
 >
 	<Button href="/auth" variant="ghost" class="absolute right-4 top-4 md:right-8 md:top-8">
 		Login

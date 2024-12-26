@@ -1,8 +1,13 @@
 import { db } from '$lib/db';
-import { usersTable } from '$lib/db/schema/schema';
+import { usersTable } from '$lib/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { sha512 } from 'js-sha512';
 import { USER_SALT } from '$env/static/private';
+
+export type User = {
+	key: string;
+	name: string;
+};
 
 export async function createUser(email: string, password: string, cPassword: string) {
 	const existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email));
@@ -30,8 +35,8 @@ export async function validateUser(email: string, password: string) {
 		);
 
 	if (userMatched !== null && userMatched.length === 1) {
-		return true;
+		return userMatched.push();
 	}
 
-	return false;
+	throw new Error('User nnot validated');
 }

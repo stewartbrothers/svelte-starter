@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "d9f9a0f6-2f88-4944-99cb-7fc7f39ff749",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "5ed816c2-12b7-46d3-be9d-0ca6237213af",
+  "prevId": "76c8be88-1143-4323-bd41-2d767587d70c",
   "tables": {
     "content": {
       "name": "content",
@@ -16,7 +16,7 @@
         },
         "title": {
           "name": "title",
-          "type": "text",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -175,14 +175,14 @@
         },
         "state": {
           "name": "state",
-          "type": "text",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "code": {
           "name": "code",
-          "type": "text",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -253,21 +253,21 @@
         },
         "firstname": {
           "name": "firstname",
-          "type": "text",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "lastname": {
           "name": "lastname",
-          "type": "text",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "email": {
           "name": "email",
-          "type": "text",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -281,14 +281,21 @@
         },
         "googleId": {
           "name": "googleId",
-          "type": "text",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
         "name": {
           "name": "name",
-          "type": "text",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "varchar(400)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

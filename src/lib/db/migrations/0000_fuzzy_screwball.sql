@@ -29,11 +29,11 @@ CREATE TABLE `oauth` (
 );
 --> statement-breakpoint
 CREATE TABLE `session` (
-	`user` int AUTO_INCREMENT NOT NULL,
+	`token` varchar(400) NOT NULL,
+	`user` int,
 	`createdAt` timestamp DEFAULT (now()),
 	`expiresAt` timestamp DEFAULT (now()),
-	`sessionId` text,
-	CONSTRAINT `session_user` PRIMARY KEY(`user`)
+	CONSTRAINT `session_token` PRIMARY KEY(`token`)
 );
 --> statement-breakpoint
 CREATE TABLE `users` (

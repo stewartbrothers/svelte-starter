@@ -1,0 +1,1 @@
+ALTER TABLE `content` MODIFY COLUMN `title` varchar(200);
