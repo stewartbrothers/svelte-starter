@@ -1,28 +1,44 @@
-import type { Handle } from '@sveltejs/kit';
-import { db } from '$lib/db';
-import type { ServerInit } from '@sveltejs/kit';
+import { redirect, type Handle } from '@sveltejs/kit';
+// import type { ServerInit } from '@sveltejs/kit';
 import { type User } from '$lib/user';
-import { generateJWTSession } from '$lib/server/session';
-import jwt from 'jsonwebtoken';
+import { validateSession } from '$lib/server/session';
+import { SESSION_COOKIE, LOGIN_REDIRECT_URL } from '$env/static/private';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const u: User = {
-		key: 'A random key',
-		name: 'Gerwood'
-	};
+	let token: string | null;
+	const jwtCookie = event.cookies.get(SESSION_COOKIE);
+	if (jwtCookie) {
+		console.info('Validating session: ' + jwtCookie);
+		token = validateSession(jwtCookie);
+	}
 
-	event.locals.user = u;
+	if (!token) {
+		console.info('Token not considered valid');
+		const authHeader = event.request.headers.get('Authorization');
+		if (authHeader && authHeader.startsWith('Bearer ')) {
+			const bearerToken = authHeader.substring(7); // Remove 'Bearer ' prefix
+			token = validateSession(bearerToken);
+		}
+	}
 
-	const token = generateJWTSession(u);
+	if (token) {
+		// console.info('Token is valid');
+		event.locals.user = token as User;
+		delete event.locals.user.exp;
+	} else {
+		event.locals.user = null;
+	}
 
-	console.info(token);
-	console.info(jwt.decode(token));
-
-	//Determine permissions here.
-
-	console.info('Have executed');
 	if (event.url.pathname.startsWith('/custom')) {
 		return new Response('custom response');
+	}
+
+	if (event.url.pathname.startsWith('/auth') && event.locals.user !== null) {
+		return redirect(307, LOGIN_REDIRECT_URL);
+	}
+
+	if (event.url.pathname.startsWith('/app') && event.locals.user === null) {
+		return redirect(307, '/');
 	}
 
 	//AUTH TOKEN.
@@ -35,9 +51,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 //Setups for the Server
 
-export const init: ServerInit = async () => {
-	await db.connect();
-};
+// export const init: ServerInit = async () => {
+// 	await db.connect();
+// };
 
 // export const handle: Handle = async ({ resolve, event }) => {
 // 	// Apply CORS header for API routes

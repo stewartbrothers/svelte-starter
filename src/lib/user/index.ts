@@ -5,8 +5,16 @@ import { sha512 } from 'js-sha512';
 import { USER_SALT } from '$env/static/private';
 
 export type User = {
-	key: string;
+	id: string;
 	name: string;
+	iat: number;
+	tracer: string;
+};
+
+export type Token = {
+	header: string;
+	payload: User;
+	signature: string;
 };
 
 export async function createUser(email: string, password: string, cPassword: string) {
@@ -26,7 +34,7 @@ export async function createUser(email: string, password: string, cPassword: str
 	return true;
 }
 
-export async function validateUser(email: string, password: string) {
+export async function validateUser(email: string, password: string): Promise<User | null> {
 	const userMatched = await db
 		.select()
 		.from(usersTable)
@@ -34,9 +42,20 @@ export async function validateUser(email: string, password: string) {
 			and(eq(usersTable.email, email), eq(usersTable.password, sha512.hex(password + USER_SALT)))
 		);
 
+	console.info(password);
+	console.info(email);
+
 	if (userMatched !== null && userMatched.length === 1) {
-		return userMatched.push();
+		const now = Math.floor(Date.now() / 1000);
+		const user: User = {
+			id: userMatched[0].key,
+			name: userMatched[0].name,
+			iat: now,
+			tracer: sha512('tracer: ' + now + Math.random() + userMatched[0].id).substring(0, 16)
+		};
+
+		return user;
 	}
 
-	throw new Error('User nnot validated');
+	throw new Error('User not validated');
 }

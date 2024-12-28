@@ -1,10 +1,7 @@
 import { db } from '$lib/db';
-import { encodeBase32 } from '@oslojs/encoding';
-import { sha512 } from 'js-sha512';
-import { sessionsTable, usersTable } from '$lib/db/schema';
 import type { RequestEvent } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, SESSION_LIFE } from '$env/static/private';
+import { JWT_SECRET, SESSION_LIFE, SESSION_COOKIE } from '$env/static/private';
 import { type User } from '$lib/user';
 
 export function validateSession(token: string) {
@@ -24,17 +21,18 @@ export function invalidateUserSessions(userId: number): void {
 	db.execute(`DELETE FROM session WHERE user = ${userId}`);
 }
 
-export function setJWTCookie(event: RequestEvent, token: string, expiresAt: Date): void {
-	event.cookies.set('_session', token, {
+export function setTokenCookie(event: RequestEvent, token: string): void {
+	event.cookies.set(SESSION_COOKIE, token, {
 		httpOnly: true,
 		path: '/',
 		secure: import.meta.env.PROD,
+		maxAge: Number(SESSION_LIFE),
 		sameSite: 'lax'
 	});
 }
 
-export function deleteSessionTokenCookie(event: RequestEvent): void {
-	event.cookies.set('session', '', {
+export function deleteTokenCookie(event: RequestEvent): void {
+	event.cookies.set(SESSION_COOKIE, '', {
 		httpOnly: true,
 		path: '/',
 		secure: import.meta.env.PROD,
@@ -43,13 +41,13 @@ export function deleteSessionTokenCookie(event: RequestEvent): void {
 	});
 }
 
-export function generateJWTSession(user: User): string {
-	return jwt.sign({ id: user.key, name: user.name }, JWT_SECRET, {
-		expiresIn: SESSION_LIFE
-	});
+export function generateJWTSessionToken(user: User): string {
+	return jwt.sign(user, JWT_SECRET, { expiresIn: Number(SESSION_LIFE) });
+}
+export function generateJWTApiToken(user: User): string {
+	return jwt.sign(user, JWT_SECRET);
 }
 
 export function createSession(user: User) {
-	const token = generateJWTSession(user);
-	return token;
+	return generateJWTSessionToken(user);
 }

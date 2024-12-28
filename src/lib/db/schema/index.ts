@@ -38,7 +38,7 @@ export const sessionsTable = table('session', {
 	expiresAt: timestamp().defaultNow()
 });
 
-export const projectsTable = table('projects', {});
+// export const projectsTable = table('projects', {});
 
 export const contentTable = table('content', {
 	id: int().primaryKey().autoincrement(),

@@ -18,16 +18,25 @@
 			<div class="grid gap-4">
 				<div class="grid gap-2">
 					<Label for="email">Email</Label>
-					<Input id="email" type="email" name="email" placeholder="m@example.com" required />
+					<Input
+						id="email"
+						tabindex="1"
+						type="email"
+						name="email"
+						placeholder="me@example.com"
+						required
+					/>
 				</div>
 				<div class="grid gap-2">
 					<div class="flex items-center">
 						<Label for="password">Password</Label>
-						<a href="##" class="ml-auto inline-block text-sm underline"> Forgot your password? </a>
+						<a href="##" class="ml-auto inline-block text-sm underline" tabindex="4">
+							Forgot your password?
+						</a>
 					</div>
-					<Input id="password" name="password" type="password" required />
+					<Input id="password" tabindex="2" name="password" type="password" required />
 				</div>
-				<Button type="submit" class="w-full">Login</Button>
+				<Button type="submit" class="w-full" tabindex="3">Login</Button>
 				<hr />
 				<GoogleAuth />
 			</div>

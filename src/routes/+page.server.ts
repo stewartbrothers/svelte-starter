@@ -1,4 +1,4 @@
-import { validateUser, createUser } from '$lib/user';
+import { createUser } from '$lib/user';
 
 export async function load() {
 	const x = {
@@ -23,7 +23,8 @@ export const actions = {
 		const created = await createUser(email, password, cPassword);
 
 		if (created) {
-			await validateUser(email, password);
+			// const user = await validateUser(email, password);
+
 			return true;
 		}
 	}
