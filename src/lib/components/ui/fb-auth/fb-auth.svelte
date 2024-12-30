@@ -5,10 +5,9 @@
 			<svg
 				viewBox="0 0 36 36"
 				class="x1lliihq x1tzjh5l x1k90msu x2h7rmj x1qfuztq xfx01vb"
-				style="--color:var(--fb-logo)"
 				fill="currentColor"
-				height="40"
-				width="40"
+				height="20"
+				width="20"
 				><path
 					d="M20.181 35.87C29.094 34.791 36 27.202 36 18c0-9.941-8.059-18-18-18S0 8.059 0 18c0 8.442 5.811 15.526 13.652 17.471L14 34h5.5l.681 1.87Z"
 				></path><path
