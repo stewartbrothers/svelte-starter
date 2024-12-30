@@ -1,4 +1,7 @@
-import { createUser } from '$lib/user';
+import { createUser, validateUser } from '$lib/user';
+import { createSession } from '$lib/server/session';
+import { redirect } from '@sveltejs/kit';
+import { LOGIN_REDIRECT_URL } from '$env/static/private';
 
 export async function load() {
 	const x = {
@@ -9,7 +12,9 @@ export async function load() {
 }
 
 export const actions = {
-	default: async ({ cookies, request }) => {
+	default: async ({ request, cookies }) => {
+		console.info('_');
+
 		const data = await request.formData();
 
 		const email = data.get('email')?.toString();
@@ -23,9 +28,12 @@ export const actions = {
 		const created = await createUser(email, password, cPassword);
 
 		if (created) {
-			// const user = await validateUser(email, password);
+			const user = await validateUser(email, password);
+			console.info('A');
+			createSession(cookies, user);
+			console.info('B');
 
-			return true;
+			return redirect(303, LOGIN_REDIRECT_URL);
 		}
 	}
 };

@@ -19,7 +19,7 @@ export const actions = {
 
 		if (user) {
 			const token = generateJWTSessionToken(user);
-			setTokenCookie(event, token);
+			setTokenCookie(event.cookies, token);
 			return redirect(303, LOGIN_REDIRECT_URL);
 		}
 	}

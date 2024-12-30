@@ -21,8 +21,8 @@ export function invalidateUserSessions(userId: number): void {
 	db.execute(`DELETE FROM session WHERE user = ${userId}`);
 }
 
-export function setTokenCookie(event: RequestEvent, token: string): void {
-	event.cookies.set(SESSION_COOKIE, token, {
+export function setTokenCookie(cookies: Cookies, token: string): void {
+	cookies.set(SESSION_COOKIE, token, {
 		httpOnly: true,
 		path: '/',
 		secure: import.meta.env.PROD,
@@ -48,6 +48,8 @@ export function generateJWTApiToken(user: User): string {
 	return jwt.sign(user, JWT_SECRET);
 }
 
-export function createSession(user: User) {
-	return generateJWTSessionToken(user);
+export function createSession(cookies: Cookies, user: User) {
+	const token = generateJWTSessionToken(user);
+	setTokenCookie(cookies, token);
+	return token;
 }

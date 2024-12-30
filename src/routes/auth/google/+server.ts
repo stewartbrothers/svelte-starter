@@ -10,8 +10,8 @@ export async function GET(): Promise<Response> {
 	const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 
 	await db.insert(oauthTable).values({
-		State: state,
-		Code: codeVerifier
+		state: state,
+		code: codeVerifier
 	});
 
 	return new Response(null, {

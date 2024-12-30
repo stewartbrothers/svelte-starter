@@ -17,6 +17,10 @@ export type Token = {
 	signature: string;
 };
 
+export function generateUserKey(email: string): string {
+	return sha512('key: ' + email + Math.random()).substring(0, 16);
+}
+
 export async function createUser(email: string, password: string, cPassword: string) {
 	const existingUser = await db.select().from(usersTable).where(eq(usersTable.email, email));
 	if ((existingUser !== null && existingUser.length == 1) || password !== cPassword) {
@@ -26,6 +30,7 @@ export async function createUser(email: string, password: string, cPassword: str
 
 	await db.insert(usersTable).values({
 		email: email,
+		key: generateUserKey(email),
 		password: sha512.hex(password + USER_SALT)
 	});
 
@@ -42,20 +47,19 @@ export async function validateUser(email: string, password: string): Promise<Use
 			and(eq(usersTable.email, email), eq(usersTable.password, sha512.hex(password + USER_SALT)))
 		);
 
-	console.info(password);
-	console.info(email);
-
 	if (userMatched !== null && userMatched.length === 1) {
-		const now = Math.floor(Date.now() / 1000);
-		const user: User = {
-			id: userMatched[0].key,
-			name: userMatched[0].name,
-			iat: now,
-			tracer: sha512('tracer: ' + now + Math.random() + userMatched[0].id).substring(0, 16)
-		};
-
-		return user;
+		return constructUser(userMatched[0].id, userMatched[0].name!, userMatched[0].key!);
 	}
 
 	throw new Error('User not validated');
+}
+
+export function constructUser(id: string, name: string, key: string): User {
+	const now = Math.floor(Date.now() / 1000);
+	return {
+		id: key,
+		name: name,
+		iat: now,
+		tracer: sha512('tracer: ' + now + Math.random() + id).substring(0, 16)
+	};
 }

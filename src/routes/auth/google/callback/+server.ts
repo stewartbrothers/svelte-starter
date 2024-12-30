@@ -1,13 +1,16 @@
 // routes/login/google/callback/+server.ts
-import { generateSessionToken, createSession, setSessionTokenCookie } from '$lib/server/session';
+import { constructUser, generateUserKey } from '$lib/user';
 import { google } from '$lib/server/oauth';
 import { decodeIdToken } from 'arctic';
 import { db } from '$lib/db';
 import { eq } from 'drizzle-orm';
+import { redirect } from '@sveltejs/kit';
 
 import type { RequestEvent } from '@sveltejs/kit';
 import type { OAuth2Tokens } from 'arctic';
 import { oauthTable, usersTable } from '$lib/db/schema';
+import { createSession } from '$lib/server/session';
+import { LOGIN_REDIRECT_URL } from '$env/static/private';
 // import { oauthTable } from '$lib/db/schema/schema';
 
 export async function GET(event: RequestEvent): Promise<Response> {
@@ -17,9 +20,10 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const confirmCode = await db.select().from(oauthTable).where(eq(oauthTable.state, state));
 
 	if (code === null || state === null || confirmCode === null || confirmCode.length != 1) {
-		return new Response(null, { status: 400 });
+		return new Response('Required details are empty please ask administrator to check the logs', {
+			status: 400
+		});
 	}
-
 	const store = confirmCode.pop();
 
 	if (state !== store.state) {
@@ -27,12 +31,17 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	}
 
 	let tokens: OAuth2Tokens;
+
 	try {
-		tokens = await google.validateAuthorizationCode(code, store?.Code);
+		tokens = await google.validateAuthorizationCode(code, store?.code);
 	} catch (e) {
 		// Invalid code or client credentials
-		return new Response(null, { status: 400 });
+		return new Response(
+			'This token has already been used, please return to the sign in page and try again',
+			{ status: 400 }
+		);
 	}
+
 	const claims = decodeIdToken(tokens.idToken());
 	const googleUserId = claims.sub;
 	const username = claims.name;
@@ -40,66 +49,45 @@ export async function GET(event: RequestEvent): Promise<Response> {
 
 	console.info(claims);
 
+	//Does the user already exist...
 	const existingUser = await db
 		.select()
 		.from(usersTable)
 		.where(eq(usersTable.googleId, googleUserId));
 
-	// const existingUser = await db.query.usersTagb.findFirst({
-	// 	with: {
-	// 		GoogleId: googleUserId
-	// 	}
-	// });
-
-	// TODO: Replace this with your own DB query.
-
-	// const existingUser = await getUserFromGoogleId(googleUserId);
+	console.info('Is existing user?');
 	console.info(existingUser);
 
-	// event.cookies.set('oauth_state', state, {
-	// 	path: '/',
-	// 	// httpOnly: true,
-	// 	maxAge: 60 * 10, // 10 minutes
-	// 	sameSite: 'lax'
-	// });
-	// event.cookies.set('oauth_verifier', codeVerifier, {
-	// 	path: '/',
-	// 	// httpOnly: true,
-	// 	maxAge: 60 * 10, // 10 minutes
-	// 	sameSite: 'lax'
-	// });
-
 	if (existingUser !== null && existingUser.length == 1) {
-		// const sessionToken = generateSessionToken();
-		// const session = await createSession(sessionToken, existingUser.id);
-		// 	setSessionTokenCookie(event, sessionToken, session.expiresAt);
-		return new Response(null, {
-			status: 302,
-			headers: {
-				Location: '/'
-			}
-		});
+		console.info('Is existing user!');
+		const user = constructUser(existingUser!.id, username, existingUser!.key);
+		createSession(event.cookies, user);
+
+		return redirect(303, LOGIN_REDIRECT_URL);
 	}
 
-	// // TODO: Replace this with your own DB query.
-	// const user = await createUser(googleUserId, username);
-	await db.insert(usersTable).values({
-		googleId: googleUserId,
-		name: username,
-		email: email,
-		firstname: claims.given_name,
-		lastname: claims.family_name
-	});
+	// Check for existing user via email...
 
-	return new Response('You are created ' + claims.family_name, { status: 200 });
+	const key = generateUserKey(email);
+	let id: string;
+	// Create a new user
+	let userRow = await db
+		.insert(usersTable)
+		.values({
+			googleId: googleUserId,
+			name: username,
+			email: email,
+			key: generateUserKey(email),
+			firstname: claims.given_name,
+			lastname: claims.family_name
+		})
+		// .onConflictDoUpdate({ target: usersTable.email, set: { name: 'John' } })
+		.returning();
 
-	// const sessionToken = generateSessionToken();
-	// const session = await createSession(sessionToken, user.id);
-	// setSessionTokenCookie(event, sessionToken, session.expiresAt);
-	// return new Response(null, {
-	// 	status: 302,
-	// 	headers: {
-	// 		Location: '/'
-	// 	}
-	// });
+	const userDat = userRow.pop();
+	const user = constructUser(userDat!.id, username, userDat!.key);
+	createSession(event.cookies, user);
+
+	//Then validate the user and log them in...
+	return redirect(303, LOGIN_REDIRECT_URL);
 }
