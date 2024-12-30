@@ -25,6 +25,7 @@ export const usersTable = table('users', {
 	email: varchar({ length: 200 }),
 	password: varchar({ length: 300 }),
 	googleId: varchar({ length: 200 }),
+	fbId: varchar({ length: 200 }),
 	name: varchar({ length: 200 }),
 	avatar: varchar({ length: 400 })
 });

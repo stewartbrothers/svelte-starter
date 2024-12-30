@@ -5,6 +5,7 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { GoogleAuth } from '$lib/components/ui/google-auth/index';
 	import { Badge } from '$lib/components/ui/badge/index';
+	import { FBAuth } from '$lib/components/ui/fb-auth';
 
 	let { data } = $props();
 </script>
@@ -27,7 +28,7 @@
 		<div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
 			<form method="POST">
 				<Card.Root class="mx-auto mt-8 max-w-sm">
-					<Badge />
+					<Badge badgeCss="bg-gradient-to-b from-stone-200 to-white" src="./logotrans.png" />
 					<Card.Header>
 						<Card.Title class="text-2xl">Signup</Card.Title>
 						<Card.Description>Enter your email to create to your account</Card.Description>
@@ -53,6 +54,7 @@
 							<Button type="submit" class="w-full">Create Account</Button>
 							<hr />
 							<GoogleAuth />
+							<FBAuth />
 						</div>
 					</Card.Content>
 				</Card.Root>

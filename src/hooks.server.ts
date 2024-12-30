@@ -2,9 +2,20 @@ import { redirect, type Handle } from '@sveltejs/kit';
 // import type { ServerInit } from '@sveltejs/kit';
 import { type User } from '$lib/user';
 import { validateSession } from '$lib/server/session';
-import { SESSION_COOKIE, LOGIN_REDIRECT_URL } from '$env/static/private';
+import { SESSION_COOKIE, LOGIN_REDIRECT_URL, CRON_SECRET } from '$env/static/private';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	//Quick check for CRONs.
+
+	if (
+		event.url.pathname.startsWith('/internal') &&
+		event.request.headers.get('Authorization') !== `Bearer ${CRON_SECRET}`
+	) {
+		return new Response('Unauthorized', {
+			status: 401
+		});
+	}
+
 	let token: string | null;
 	const jwtCookie = event.cookies.get(SESSION_COOKIE);
 	if (jwtCookie) {
@@ -13,7 +24,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (!token) {
-		console.info('Token not considered valid');
+		console.info('All your bases are belong to us!');
 		const authHeader = event.request.headers.get('Authorization');
 		if (authHeader && authHeader.startsWith('Bearer ')) {
 			const bearerToken = authHeader.substring(7); // Remove 'Bearer ' prefix
