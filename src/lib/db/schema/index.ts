@@ -36,17 +36,6 @@ export const accounts = table('account', {
 	updatedAt: timestamp()
 });
 
-export const projects = table('projects', {
-	id: uuid('id')
-		.primaryKey()
-		.default(sql`gen_random_uuid()`),
-	slug: varchar({ length: 200 }).unique(),
-	name: varchar({ length: 200 }),
-	description: text(),
-	createdAt: timestamp().defaultNow(),
-	updatedAt: timestamp()
-});
-
 export const contentStatus = pgEnum('status', ['Usable', 'Retired']);
 
 export const contentTable = table('content', {

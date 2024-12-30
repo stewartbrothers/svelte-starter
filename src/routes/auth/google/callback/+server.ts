@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 
 import type { RequestEvent } from '@sveltejs/kit';
 import type { OAuth2Tokens } from 'arctic';
-import { oauthTable, usersTable } from '$lib/db/schema/schema';
+import { oauthTable, usersTable } from '$lib/db/schema';
 // import { oauthTable } from '$lib/db/schema/schema';
 
 export async function GET(event: RequestEvent): Promise<Response> {
