@@ -1,20 +1,21 @@
-// import { sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import {
-	json,
-	int,
-	time,
-	boolean,
+	text,
+	uuid,
+	pgTable as table,
 	timestamp,
-	mysqlEnum,
-	mysqlTable,
-	varchar
-} from 'drizzle-orm/mysql-core';
-
-const table = mysqlTable;
-const enm = mysqlEnum;
+	boolean,
+	json,
+	varchar,
+	pgEnum,
+	time,
+	integer as int
+} from 'drizzle-orm/pg-core';
 
 export const usersTable = table('users', {
-	id: int().primaryKey().autoincrement(),
+	id: uuid('id')
+		.primaryKey()
+		.default(sql`gen_random_uuid()`),
 	key: varchar({ length: 100 }).unique(),
 	firstname: varchar({ length: 200 }),
 	lastname: varchar({ length: 200 }),
@@ -25,25 +26,35 @@ export const usersTable = table('users', {
 	avatar: varchar({ length: 400 })
 });
 
-export const oauthTable = table('oauth', {
+export const accounts = table('account', {
+	id: uuid('id')
+		.primaryKey()
+		.default(sql`gen_random_uuid()`),
+	slug: varchar({ length: 200 }).unique(),
+	name: varchar({ length: 200 }),
 	createdAt: timestamp().defaultNow(),
-	state: varchar({ length: 200 }),
-	code: varchar({ length: 200 })
+	updatedAt: timestamp()
 });
 
-export const sessionsTable = table('session', {
-	token: varchar({ length: 400 }).primaryKey(),
-	user: int(),
+export const projects = table('projects', {
+	id: uuid('id')
+		.primaryKey()
+		.default(sql`gen_random_uuid()`),
+	slug: varchar({ length: 200 }).unique(),
+	name: varchar({ length: 200 }),
+	description: text(),
 	createdAt: timestamp().defaultNow(),
-	expiresAt: timestamp().defaultNow()
+	updatedAt: timestamp()
 });
 
-// export const projectsTable = table('projects', {});
+export const contentStatus = pgEnum('status', ['Usable', 'Retired']);
 
 export const contentTable = table('content', {
-	id: int().primaryKey().autoincrement(),
+	id: varchar()
+		.primaryKey()
+		.default(sql`gen_random_uuid()`),
 	title: varchar({ length: 200 }),
-	status: enm(['Usable', 'Retired']),
+	status: contentStatus(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp(),
 	tags: json(),

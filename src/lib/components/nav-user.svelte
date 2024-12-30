@@ -4,7 +4,6 @@
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import CreditCard from 'lucide-svelte/icons/credit-card';
 	import LogOut from 'lucide-svelte/icons/log-out';
-	import Sparkles from 'lucide-svelte/icons/sparkles';
 
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
@@ -20,6 +19,10 @@
 			avatar: string;
 		};
 	} = $props();
+
+	function logout() {
+		window.location.replace('/logout');
+	}
 
 	const sidebar = useSidebar();
 </script>
@@ -65,13 +68,6 @@
 					</div>
 				</DropdownMenu.Label>
 				<DropdownMenu.Separator />
-				<!-- <DropdownMenu.Group>
-					<DropdownMenu.Item>
-						<Sparkles />
-						Upgrade to Pro
-					</DropdownMenu.Item>
-				</DropdownMenu.Group> -->
-				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
 					<DropdownMenu.Item>
 						<BadgeCheck />
@@ -87,7 +83,7 @@
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item>
+				<DropdownMenu.Item onSelect={() => logout()}>
 					<LogOut />
 					Log out
 				</DropdownMenu.Item>

@@ -1,5 +1,5 @@
 import { db } from '$lib/db';
-import type { RequestEvent } from '@sveltejs/kit';
+import type { Cookies, RequestEvent } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, SESSION_LIFE, SESSION_COOKIE } from '$env/static/private';
 import { type User } from '$lib/user';
@@ -31,8 +31,8 @@ export function setTokenCookie(event: RequestEvent, token: string): void {
 	});
 }
 
-export function deleteTokenCookie(event: RequestEvent): void {
-	event.cookies.set(SESSION_COOKIE, '', {
+export function deleteTokenCookie(cookies: Cookies): void {
+	cookies.set(SESSION_COOKIE, '', {
 		httpOnly: true,
 		path: '/',
 		secure: import.meta.env.PROD,

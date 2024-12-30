@@ -1,11 +1,7 @@
-import {deleteTokenCookie} from '$lib/server/session';
+import { deleteTokenCookie } from '$lib/server/session';
+import { redirect } from '@sveltejs/kit';
 
-export async function GET(): Promise<Response> {
-	return new Response(null, {
-	   deleteTokenCookie()
-		status: 302,
-		headers: {
-			Location: url.toString()
-		}
-	});
+export async function GET({ request, cookies }): Promise<Response> {
+	deleteTokenCookie(cookies);
+	return redirect(307, '/');
 }

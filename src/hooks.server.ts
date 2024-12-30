@@ -37,7 +37,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return redirect(307, LOGIN_REDIRECT_URL);
 	}
 
-	if (event.url.pathname.startsWith('/app') && event.locals.user === null) {
+	if (event.url.pathname.startsWith('/dashboard') && event.locals.user === null) {
 		return redirect(307, '/');
 	}
 

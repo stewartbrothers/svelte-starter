@@ -9,7 +9,7 @@
 </script>
 
 <Sidebar.Provider>
-	<AppSidebar user={data.user} account={data.account} />
+	<AppSidebar user={data.user} account={data.account} menu={data.menu} />
 	<Sidebar.Inset>
 		<header class="flex h-16 shrink-0 items-center gap-2">
 			<div class="flex items-center gap-2 px-4">

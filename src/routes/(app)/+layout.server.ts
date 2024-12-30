@@ -8,6 +8,8 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		account: {
 			name: 'AdsLatte Inc.',
 			type: 'ExpressMe'
-		}
+		},
+		menu: [],
+		secondary: []
 	};
 };
