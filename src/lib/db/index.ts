@@ -2,11 +2,11 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { DB_URL, DB_TYPE } from '$env/static/private';
 import fs from 'fs';
 
-let db;
+let dbSetup;
 if (DB_TYPE === 'neon') {
-	db = drizzle(DB_URL!);
+	dbSetup = drizzle(DB_URL!);
 } else {
-	db = drizzle({
+	dbSetup = drizzle({
 		logger: true,
 		connection: {
 			connectionString: DB_URL,
@@ -20,7 +20,7 @@ if (DB_TYPE === 'neon') {
 	});
 }
 
-export default db;
+export const db = dbSetup;
 
 // FOR MYSQL
 // import { drizzle } from 'drizzle-orm/mysql2';

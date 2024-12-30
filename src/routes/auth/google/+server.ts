@@ -1,8 +1,7 @@
 import { generateState, generateCodeVerifier } from 'arctic';
 import { google } from '$lib/server/oauth';
-
 import { db } from '$lib/db';
-import { oauthTable } from '$lib/db/schema/schema';
+import { oauthTable } from '$lib/db/schema';
 
 export async function GET(): Promise<Response> {
 	const state = generateState();

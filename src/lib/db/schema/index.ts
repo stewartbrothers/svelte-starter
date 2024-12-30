@@ -26,6 +26,12 @@ export const usersTable = table('users', {
 	avatar: varchar({ length: 400 })
 });
 
+export const oauthTable = table('oauth', {
+	createdAt: timestamp().defaultNow(),
+	state: varchar({ length: 200 }),
+	code: varchar({ length: 200 })
+});
+
 export const accounts = table('account', {
 	id: uuid('id')
 		.primaryKey()
