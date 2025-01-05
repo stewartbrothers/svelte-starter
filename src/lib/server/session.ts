@@ -42,6 +42,7 @@ export function deleteTokenCookie(cookies: Cookies): void {
 }
 
 export function generateJWTSessionToken(user: User): string {
+	console.info(user);
 	return jwt.sign(user, JWT_SECRET, { expiresIn: Number(SESSION_LIFE) });
 }
 export function generateJWTApiToken(user: User): string {

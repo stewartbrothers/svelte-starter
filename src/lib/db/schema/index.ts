@@ -10,6 +10,7 @@ import {
 	varchar,
 	pgEnum,
 	time,
+	primaryKey,
 	integer as int
 } from 'drizzle-orm/pg-core';
 
@@ -27,27 +28,45 @@ export const usersTable = table('users', {
 	googleId: varchar({ length: 200 }),
 	fbId: varchar({ length: 200 }),
 	name: varchar({ length: 200 }),
-	avatar: varchar({ length: 400 })
+	avatar: varchar({ length: 400 }),
+	initials: varchar({ length: 2 })
 });
 
 function genKey(): string {
 	return sha512('key: ' + Math.random()).substring(0, 16);
 }
+
 export const oauthTable = table('oauth', {
 	createdAt: timestamp().defaultNow(),
 	state: varchar({ length: 200 }).primaryKey(),
 	code: varchar({ length: 200 })
 });
 
-export const accounts = table('account', {
+export const accountsTable = table('account', {
 	id: uuid('id')
 		.primaryKey()
 		.default(sql`gen_random_uuid()`),
 	slug: varchar({ length: 200 }).unique(),
 	name: varchar({ length: 200 }),
 	createdAt: timestamp().defaultNow(),
-	updatedAt: timestamp()
+	updatedAt: timestamp(),
+	creator: uuid().references(() => usersTable.id)
 });
+
+export const accountUsersTable = table(
+	'account_users',
+	{
+		user: uuid().references(() => usersTable.id),
+		account: uuid().references(() => accountsTable.id)
+	},
+	(table) => {
+		return [
+			{
+				pk: primaryKey({ columns: [table.user, table.account] })
+			}
+		];
+	}
+);
 
 export const contentStatus = pgEnum('status', ['Usable', 'Retired']);
 
@@ -73,5 +92,6 @@ export const contentTable = table('content', {
 	type: varchar({ length: 30 }),
 	hash: varchar({ length: 256 }),
 	inUse: boolean(),
-	contentType: varchar({ length: 100 })
+	contentType: varchar({ length: 100 }),
+	account: uuid().references(() => accountsTable.id)
 });

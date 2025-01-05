@@ -19,7 +19,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 	let token: string | null;
 	const jwtCookie = event.cookies.get(SESSION_COOKIE);
 	if (jwtCookie) {
-		console.info('Validating session: ' + jwtCookie);
 		token = validateSession(jwtCookie);
 	}
 
@@ -33,9 +32,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	if (token) {
-		// console.info('Token is valid');
 		event.locals.user = token as User;
-		delete event.locals.user.exp;
+		delete event.locals.user.exp; //Remove the expiration time from the user object. (for now).
 	} else {
 		event.locals.user = null;
 	}
@@ -48,7 +46,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return redirect(307, LOGIN_REDIRECT_URL);
 	}
 
-	if (event.url.pathname.startsWith('/dashboard') && event.locals.user === null) {
+	if (
+		(event.url.pathname.startsWith('/dashboard') ||
+			event.url.pathname.startsWith('/content') ||
+			event.url.pathname.startsWith('/account')) &&
+		event.locals.user === null
+	) {
 		return redirect(307, '/');
 	}
 

@@ -2,12 +2,17 @@
 	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import Frame from 'lucide-svelte/icons/frame';
+	import Database from 'lucide-svelte/icons/database';
+	import LayoutDashboard from 'lucide-svelte/icons/layout-dashboard';
 
 	let {
 		title,
+		showTitle,
 		items
 	}: {
 		title: string;
+		showTitle: boolean;
 		items: {
 			title: string;
 			url: string;
@@ -24,7 +29,9 @@
 </script>
 
 <Sidebar.Group>
-	<Sidebar.GroupLabel>{title}</Sidebar.GroupLabel>
+	{#if showTitle}
+		<Sidebar.GroupLabel>{title}</Sidebar.GroupLabel>
+	{/if}
 	<Sidebar.Menu>
 		{#each items as mainItem}
 			<Collapsible.Root open={mainItem.isActive}>
@@ -36,7 +43,15 @@
 							{/snippet}
 							{#snippet child({ props })}
 								<a href={mainItem.url} {...props}>
-									<mainItem.icon />
+									{#if mainItem.icon === 'frame'}>
+										<Frame />
+									{/if}
+									{#if mainItem.icon === 'database'}
+										<Database />
+									{/if}
+									{#if mainItem.icon === 'dashboard'}
+										<LayoutDashboard />
+									{/if}
 									<span>{mainItem.title}</span>
 								</a>
 							{/snippet}

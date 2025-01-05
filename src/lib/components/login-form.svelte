@@ -4,6 +4,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { GoogleAuth } from '$lib/components/ui/google-auth/index';
+	import { FBAuth } from '$lib/components/ui/fb-auth/index';
 	import { Badge } from '$lib/components/ui/badge/index';
 </script>
 
@@ -39,6 +40,7 @@
 				<Button type="submit" class="w-full" tabindex="3">Login</Button>
 				<hr />
 				<GoogleAuth />
+				<FBAuth />
 			</div>
 			<div class="mt-4 text-center text-sm">
 				Don't have an account?

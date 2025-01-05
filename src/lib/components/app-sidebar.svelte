@@ -5,11 +5,13 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import Command from 'lucide-svelte/icons/command';
 	import type { ComponentProps } from 'svelte';
+	// import user from '$lib/store/user.svelte';
+	// import accounts from '$lib/store/account.svelte';
 
 	let {
 		ref = $bindable(null),
 		user,
-		account,
+		accounts,
 		menu,
 		secondary,
 		...restProps
@@ -22,18 +24,23 @@
 			<Sidebar.MenuItem>
 				<Sidebar.MenuButton size="lg">
 					{#snippet child({ props })}
-						<a href="##" {...props}>
-							<div
-								class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
-							>
-								<Command class="size-4" />
-							</div>
-							<div class="grid flex-1 text-left text-sm leading-tight">
-								<span class="truncate font-semibold">{account.name}</span>
-								<!-- <span class="truncate text-xs">{data.account.type}</span> -->
-							</div>
-						</a>
+						{#each accounts as account}
+							<a href="##" {...props}>
+								<div
+									class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
+								>
+									<Command class="size-4" />
+								</div>
+								<div class="grid flex-1 text-left text-sm leading-tight">
+									<span class="truncate font-semibold">{account.name}</span>
+									<!-- <span class="truncate text-xs">{data.account.type}</span> -->
+								</div>
+							</a>
+						{/each}
 					{/snippet}
+					{#if accounts.length == 0}
+						Create An Account
+					{/if}
 				</Sidebar.MenuButton>
 			</Sidebar.MenuItem>
 		</Sidebar.Menu>

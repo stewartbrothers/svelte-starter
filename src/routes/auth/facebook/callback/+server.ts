@@ -1,10 +1,8 @@
 // routes/login/google/callback/+server.ts
 import { constructUser, generateUserKey } from '$lib/user';
 import { facebook } from '$lib/server/oauth';
-import { decodeIdToken } from 'arctic';
 import { db } from '$lib/db';
 import { eq } from 'drizzle-orm';
-import { redirect } from '@sveltejs/kit';
 
 import type { RequestEvent } from '@sveltejs/kit';
 import type { OAuth2Tokens } from 'arctic';
@@ -47,12 +45,9 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		//Does the user already exist...
 		const existingUser = await db.select().from(usersTable).where(eq(usersTable.fbId, fbUser.id));
 
-		console.info('Is existing user?');
-		console.info(existingUser);
-
 		if (existingUser !== null && existingUser.length == 1) {
 			console.info('Is existing user!');
-			const user = constructUser(existingUser!.id, existingUser!.name, existingUser!.key);
+			const user = constructUser(existingUser.pop());
 			createSession(event.cookies, user);
 
 			return new Response(null, {
@@ -81,12 +76,10 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			.returning();
 
 		const userDat = userRow.pop();
-		const user = constructUser(userDat!.id, fbUser.name, key);
-		console.info('creating session');
+		const user = constructUser(userDat);
 		createSession(event.cookies, user);
 
 		//Then validate the user and log them in...
-		console.info('redirecting');
 		return new Response(null, {
 			status: 303,
 			headers: {
@@ -94,7 +87,6 @@ export async function GET(event: RequestEvent): Promise<Response> {
 			}
 		});
 	} catch (e) {
-		console.info(e);
 		// Invalid code or client credentials
 		return new Response(
 			'This token has already been used, please return to the sign in page and try again',

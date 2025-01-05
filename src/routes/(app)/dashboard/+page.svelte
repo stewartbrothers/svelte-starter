@@ -1,1 +1,5 @@
-Me and My Dashboard
+<script>
+	import NewAccount from './newAccount.svelte';
+</script>
+
+<NewAccount />

@@ -55,12 +55,11 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		.from(usersTable)
 		.where(eq(usersTable.googleId, googleUserId));
 
-	console.info('Is existing user?');
 	console.info(existingUser);
 
 	if (existingUser !== null && existingUser.length == 1) {
 		console.info('Is existing user!');
-		const user = constructUser(existingUser!.id, username, existingUser!.key);
+		const user = constructUser(existingUser.pop());
 		createSession(event.cookies, user);
 
 		return redirect(303, LOGIN_REDIRECT_URL);
@@ -85,7 +84,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		.returning();
 
 	const userDat = userRow.pop();
-	const user = constructUser(userDat!.id, username, userDat!.key);
+	const user = constructUser(userDat);
 	createSession(event.cookies, user);
 
 	//Then validate the user and log them in...

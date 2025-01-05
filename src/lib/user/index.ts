@@ -7,6 +7,8 @@ import { USER_SALT } from '$env/static/private';
 export type User = {
 	id: string;
 	name: string;
+	email: string;
+	avatar: string;
 	iat: number;
 	tracer: string;
 };
@@ -48,18 +50,20 @@ export async function validateUser(email: string, password: string): Promise<Use
 		);
 
 	if (userMatched !== null && userMatched.length === 1) {
-		return constructUser(userMatched[0].id, userMatched[0].name!, userMatched[0].key!);
+		return constructUser(userMatched);
 	}
 
 	throw new Error('User not validated');
 }
 
-export function constructUser(id: string, name: string, key: string): User {
+export function constructUser(user): User {
 	const now = Math.floor(Date.now() / 1000);
 	return {
-		id: key,
-		name: name,
+		id: user.key,
+		name: user.name,
+		email: user.email,
+		avatar: user.avatar,
 		iat: now,
-		tracer: sha512('tracer: ' + now + Math.random() + id).substring(0, 16)
+		tracer: sha512('tracer: ' + now + Math.random() + user.id).substring(0, 16)
 	};
 }
