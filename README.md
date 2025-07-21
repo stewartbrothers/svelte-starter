@@ -1,17 +1,17 @@
-# sv
+# SvelteKit SB Base
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SB Sveltekit Starter Project
 
-## Creating a project
+## Install the project
 
-If you're seeing this, you've probably already done this step. Congrats!
 
+### bun
 ```bash
-# create a new project in the current directory
-npx sv create
+# install using bun
+bun install
 
-# create a new project in my-app
-npx sv create my-app
+# Install using NPM
+npm install
 ```
 
 ## Developing
@@ -19,10 +19,23 @@ npx sv create my-app
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
-npm run dev
+# using Bun
+bun run dev -- --open
 
-# or start the server and open the app in a new browser tab
+# using NPM
 npm run dev -- --open
+```
+
+## Updating the DB Schema
+
+After modifying the schema in src/lib/db update via drizzle
+
+```bash
+#using bun
+# Update drizzle's schema definitions with new changes
+bunx drizzle-kit generate
+# Apply new changes to the database.
+bunx drizzle-kit migrate
 ```
 
 ## Building
@@ -33,6 +46,5 @@ To create a production version of your app:
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
